@@ -7,6 +7,7 @@ using PM_Case_Managemnt_API.Services.CaseMGMT.Applicants;
 using PM_Case_Managemnt_API.Services.CaseMGMT.CaseAttachments;
 using PM_Case_Managemnt_API.Services.CaseMGMT.FileInformationService;
 using PM_Case_Managemnt_API.Services.CaseService.Encode;
+using PM_Case_Managemnt_API.Services.Common;
 using System.Net.Http.Headers;
 
 namespace PM_Case_Managemnt_API.Controllers.Case
@@ -18,17 +19,20 @@ namespace PM_Case_Managemnt_API.Controllers.Case
         private readonly ICaseEncodeService _caseEncodeService;
         private readonly ICaseAttachementService _caseAttachmentService;
         private readonly IFilesInformationService _filesInformationService;
-        private readonly IApplicantService _applicantService; 
+        private readonly IApplicantService _applicantService;
+        private readonly IEmployeeService _employeeService;
         public CaseEncodingController(
             ICaseEncodeService caseEncodeService,
             ICaseAttachementService caseAttachementService, 
             IFilesInformationService filesInformationService,
-            IApplicantService applicantService)
+            IApplicantService applicantService,
+            IEmployeeService employeeService)
         {
             _caseEncodeService = caseEncodeService;
             _caseAttachmentService = caseAttachementService;
             _filesInformationService = filesInformationService;
             _applicantService = applicantService;
+            _employeeService = employeeService;
         }
 
 
@@ -43,8 +47,9 @@ namespace PM_Case_Managemnt_API.Controllers.Case
                     LetterNumber = Request.Form["LetterNumber"],
                     LetterSubject = Request.Form["LetterSubject"],
                     CaseTypeId = Guid.Parse(Request.Form["CaseTypeId"]),
-                    ApplicantId = Guid.Parse(Request.Form["ApplicantId"]),
-                    EmployeeId = Guid.Parse(Request.Form["ApplicantId"]),
+                    EmployeeId=!string.IsNullOrEmpty(Request.Form["EmployeeId"]) ? Guid.Parse(Request.Form["EmployeeId"]) : (Guid?)null,
+                    ApplicantId = !string.IsNullOrEmpty(Request.Form["ApplicantId"]) ? Guid.Parse(Request.Form["ApplicantId"]) : (Guid?)null,
+                   
                     PhoneNumber2 = Request.Form["PhoneNumber2"],
                     Representative = Request.Form["Representative"],
                     CreatedBy = Guid.Parse(Request.Form["CreatedBy"]),
@@ -62,11 +67,20 @@ namespace PM_Case_Managemnt_API.Controllers.Case
                         {
                             string folderName = Path.Combine("Assets", "CaseAttachments");
 
-                            var applicant = _applicantService.GetApplicantById(caseEncodePostDto.ApplicantId);
-                            string applicantName = applicant.Result.ApplicantName; // replace with actual applicant name
-                            string applicantFolder = Path.Combine(folderName, applicantName);
+                            var applicant = await _applicantService.GetApplicantById(caseEncodePostDto.ApplicantId);
 
+                            string applicantFolder = "";
+                            if (applicant != null)
+                            {
 
+                                string applicantName = applicant.ApplicantName; // replace with actual applicant name
+                                 applicantFolder = Path.Combine(folderName, applicantName);
+                            }
+                            else
+                            {
+                                var employee = await _employeeService.GetEmployeesById((Guid)(caseEncodePostDto?.EmployeeId));
+                                applicantFolder = Path.Combine(folderName, employee.FullName);
+                            }
 
                             string pathToSave = Path.Combine(Directory.GetCurrentDirectory(), applicantFolder);
 

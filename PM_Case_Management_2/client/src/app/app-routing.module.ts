@@ -76,6 +76,7 @@ import { ProgressReportBystructureComponent } from './pages/pm/progress-report/p
 import { PerformanceReportComponent } from './pages/pm/progress-report/performance-report/performance-report.component';
 import { EstimatedCoastComponent } from './pages/pm/progress-report/estimated-coast/estimated-coast.component';
 import { SearchCasesComponent } from './pages/Case/search-cases/search-cases.component';
+import { InsideCaseComponent } from './pages/Case/inside-case/inside-case.component';
 
 
 
@@ -98,6 +99,7 @@ const routes: Routes = [
   { path: 'task',canActivate:[AuthGuard],component:TasksComponent,data:{permittedRoles: ['Super Admin','Director','PM Admin','Planner','Plan Reporting']}},  
   { path: 'activityparent', canActivate:[AuthGuard],component:ActivityParentsComponent ,data:{permittedRoles:['Super Admin','Director','Employee Manager','PM Admin','Planner','Plan Reporting','Case Admin','Member','Secretery','Encoder']}},
   { path: 'encodecase' ,canActivate:[AuthGuard],component : EncodeCaseComponent,data:{permittedRoles : ['Super Admin','Case Admin','Encoder']}},
+  { path :'insidecase',canActivate:[AuthGuard],component:InsideCaseComponent,data:{permittedRoles : ['Super Admin','Director','Employee Manager','PM Admin','Planner','Plan Reporting','Case Admin','Member','Secretery','Encoder']}},
   { path: 'searchcase' ,canActivate:[AuthGuard],component : SearchCasesComponent,data:{permittedRoles : ['Super Admin','Case Admin','Encoder']}},
  
  

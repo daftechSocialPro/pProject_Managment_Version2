@@ -54,6 +54,11 @@
                                     routerLink="/caseappointments"> <i
                                           class="bi bi-circle"></i><span>Appointments</span>
                               </a></li>
+                                  <li *ngIf="roleMatch(['Super Admin','Case Admin','Encoder','Director','Member','Secretery','Employee Manager'])"> <a 
+                              [ngClass]="getUrl()=='/insidecase'?'nav-link ':'nav-link collapsed'"
+                                    routerLink="/insidecase"> <i class="bi bi-circle"></i><span>Inside Cases</span>
+                              </a>
+                        </li>
                         <li *ngIf="roleMatch(['Super Admin','Case Admin','Encoder'])"> <a 
                               [ngClass]="getUrl()=='/encodecase'?'nav-link ':'nav-link collapsed'"
                                     routerLink="/encodecase"> <i class="bi bi-circle"></i><span>Encoded Cases</span>
