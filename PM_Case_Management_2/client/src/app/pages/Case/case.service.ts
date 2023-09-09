@@ -55,7 +55,10 @@ export class CaseService {
 
         return this.http.get<SelectList[]>(this.BaseURI + "/fileSettingsByCaseTypeId?CaseTypeId=" + caseTypeId)
     }
+    getChildCasesByCaseTypeId(caseTypeId: string) {
 
+        return this.http.get<SelectList[]>(this.BaseURI + "/childCasesByCaseTypeId?CaseTypeId=" + caseTypeId)
+    }
     //applicant 
 
     createApplicant(applicant: any) {

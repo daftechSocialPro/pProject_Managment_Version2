@@ -23,6 +23,7 @@ export class AddInsideCaseComponent implements OnInit {
   applicants!: SelectList[];
   InsideCases!: SelectList[];
   fileSettings!: SelectList[];
+  childCases ! : SelectList[]
   toast!: toastPayload;
   CaseNumber!: string;
   Documents: any;
@@ -98,6 +99,13 @@ export class AddInsideCaseComponent implements OnInit {
   }
 
 
+  getFiles (casetTypeId: string){
+
+    this.getChildCases(casetTypeId),
+    this.getFileSettings(casetTypeId)
+    
+  }
+
   getFileSettings(casetTypeId: string) {
     this.caseService.getFileSettignsByCaseTypeId(casetTypeId).subscribe({
       next: (res) => {
@@ -108,6 +116,19 @@ export class AddInsideCaseComponent implements OnInit {
       },
     });
   }
+  getChildCases(casetTypeId: string) {
+    this.caseService.getChildCasesByCaseTypeId(casetTypeId).subscribe({
+      next: (res) => {
+        this.childCases = res;
+      },
+      error: (err) => {
+        console.error(err);
+      },
+    });
+  }
+
+
+
   submit() {
     if (this.caseForm.valid) {
 
